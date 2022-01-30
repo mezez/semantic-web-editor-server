@@ -1,5 +1,5 @@
-const RDocument = require("../models/rdocument");
-const User = require("../models/user");
+const RDocument = require("../models/rDocument.js");
+const User = require("../models/user.js");
 
 exports.create = async (req, res, next) => {
   let data = {
