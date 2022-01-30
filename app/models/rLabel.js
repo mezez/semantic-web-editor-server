@@ -18,4 +18,5 @@ const RLabelSchema = mongoose.Schema(
   }
 );
 RLabelSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("RLabel", RLabelSchema);
+module.exports =
+  mongoose.models.RLabel || mongoose.model("RLabel", RLabelSchema);

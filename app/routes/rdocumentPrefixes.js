@@ -16,7 +16,7 @@ router.post(
 
 //GET all rdocuments by doc id
 router.get(
-  "/all-document-prefixes:document_id",
+  "/all-document-prefixes/:document_id",
   rdocumentPrefixController.findAllByDocumentId
 );
 

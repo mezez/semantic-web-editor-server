@@ -13,4 +13,6 @@ RDocumentPrefixSchema.pre("remove", function (next) {
   // this.model("Picture").remove({ RDocument_id: this._id }, next);
 });
 RDocumentPrefixSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("RDocumentPrefix", RDocumentPrefixSchema);
+module.exports =
+  mongoose.models.RDocumentPrefix ||
+  mongoose.model("RDocumentPrefix", RDocumentPrefixSchema);

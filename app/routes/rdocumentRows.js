@@ -19,7 +19,7 @@ router.post(
 
 //GET all rdocuments
 router.get(
-  "/all-document-rows:document_id",
+  "/all-document-rows/:document_id",
   rdocumentRowController.findAllByDocumentId
 );
 router.get("/all-documents-rows", rdocumentRowController.findAll);

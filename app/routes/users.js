@@ -10,8 +10,7 @@ const userController = require("../controllers/users");
 router.post(
   "/signup",
   [
-    body("first_name").trim().isLength({ min: 1 }),
-    body("last_name").trim().isLength({ min: 1 }),
+    body("name").trim().isLength({ min: 1 }),
     body("email").trim().isLength({ min: 4 }),
     body("password").trim().isLength({ min: 4 }),
   ],

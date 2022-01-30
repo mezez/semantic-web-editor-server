@@ -11,4 +11,4 @@ const ItemSchema = mongoose.Schema(
   }
 );
 ItemSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("Item", ItemSchema);
+module.exports = mongoose.models.Item || mongoose.model("Item", ItemSchema);

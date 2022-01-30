@@ -18,4 +18,5 @@ RPrefixSchema.pre("remove", function (next) {
 });
 
 RPrefixSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("RPrefix", RPrefixSchema);
+module.exports =
+  mongoose.models.RPrefix || mongoose.model("RPrefix", RPrefixSchema);

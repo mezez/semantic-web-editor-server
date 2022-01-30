@@ -26,4 +26,5 @@ CategorySchema.pre("remove", function (next) {
 });
 CategorySchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model("Category", CategorySchema);
+module.exports =
+  mongoose.models.Category || mongoose.model("Category", CategorySchema);

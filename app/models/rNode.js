@@ -12,4 +12,4 @@ const RNodeSchema = mongoose.Schema(
   }
 );
 RNodeSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("RNode", RNodeSchema);
+module.exports = mongoose.models.RNode || mongoose.model("RNode", RNodeSchema);

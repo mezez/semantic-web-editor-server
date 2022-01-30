@@ -14,4 +14,5 @@ CommentSchema.pre("remove", function (next) {
   // this.model("Picture").remove({ RDocument_id: this._id }, next);
 });
 CommentSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("Comment", CommentSchema);
+module.exports =
+  mongoose.models.Comment || mongoose.model("Comment", CommentSchema);

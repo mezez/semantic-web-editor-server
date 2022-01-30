@@ -4,11 +4,11 @@ const RDocumentRowSchema = mongoose.Schema(
   {
     rdocument_id: { type: mongoose.Schema.Types.ObjectId, ref: "RDocument" },
     row_data: {
-      first_column: { type: Number },
+      first_column: { type: String },
 
-      second_column: { type: Number },
+      second_column: { type: String },
 
-      third_column: { type: Number },
+      third_column: { type: String },
     },
     category_id: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   },
@@ -20,4 +20,6 @@ RDocumentRowSchema.pre("remove", function (next) {
   // this.model("Picture").remove({ RDocument_id: this._id }, next);
 });
 RDocumentRowSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("RDocumentRow", RDocumentRowSchema);
+module.exports =
+  mongoose.models.RDocumentRow ||
+  mongoose.model("RDocumentRow", RDocumentRowSchema);

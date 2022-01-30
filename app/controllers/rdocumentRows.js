@@ -10,7 +10,7 @@ exports.create = async (req, res, next) => {
   third_column = req.body.third_column;
 
   let data = {
-    document_id: req.body.document_id,
+    rdocument_id: req.body.document_id,
     category_id: req.body.category_id,
     row_data: {
       first_column,
@@ -18,6 +18,7 @@ exports.create = async (req, res, next) => {
       third_column,
     },
   };
+
   const newDocument = new RDocumentRow(data);
 
   try {
@@ -41,11 +42,11 @@ exports.findAllByDocumentId = async (req, res, next) => {
     console.log(rdocumentRows);
     //loop through the data, get the names(node, label or item) of the row data based on the category
 
-    const documentsLength = rdocumentRows.length;
+    const documentRowLength = rdocumentRows.length;
     let finalDocumentRows = [];
     let updatedDocumentRow;
     for (let i = 0; i < documentRowLength; i++) {
-      if (rdocumentRows[i].category.name == "triple") {
+      if (rdocumentRows[i].category_id.name == "Triple") {
         const firstNode = await RNode.find({
           _id: rdocumentRows[i].row_data.first_column,
         });

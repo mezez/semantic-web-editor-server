@@ -16,8 +16,8 @@ router.post(
 );
 
 //GET all rprefixs
-router.get("/all-rprefixs", rprefixController.findAll);
-router.get("/all-rprefixs-paginated", rprefixController.findAllPaginated);
+router.get("/all-rprefixes", rprefixController.findAll);
+router.get("/all-rprefixes-paginated", rprefixController.findAllPaginated);
 
 //GET single rprefixs
 router.get("/rprefix/:prefix_id", rprefixController.findOne);

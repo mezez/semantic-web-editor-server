@@ -62,7 +62,7 @@ exports.findAll = async (req, res, next) => {
 exports.findOne = async (req, res, next) => {
   try {
     let prefix = await RPrefix.findById(req.params.prefix_id);
-    if (!rdocumentRow) {
+    if (!prefix) {
       return res.status(404).json({
         message: "Prefix not found with id " + req.params.prefix_id,
       });

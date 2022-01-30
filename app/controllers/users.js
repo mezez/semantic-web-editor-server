@@ -31,8 +31,7 @@ exports.create = async (req, res, next) => {
       const user = new User({
         email: req.body.email,
         password: req.body.password,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
+        name: req.body.name,
       });
 
       //save to db
