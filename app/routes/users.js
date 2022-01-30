@@ -28,9 +28,9 @@ router.post(
 );
 
 //get all users
-router.get("/index", userController.findAllPaginated);
+router.get("/index", middleware.checkToken, userController.findAllPaginated);
 
 //get single user
-router.get("/:user_id", userController.findOne);
+router.get("/:user_id", middleware.checkToken, userController.findOne);
 
 module.exports = router;

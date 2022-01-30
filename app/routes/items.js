@@ -7,6 +7,7 @@ const middleware = require("../helpers/middleware");
 //POST create items
 router.post(
   "/item",
+  middleware.checkToken,
   [
     body("name").trim().isLength({ min: 1 }),
     body("description").trim().isLength({ min: 1 }),
@@ -15,12 +16,20 @@ router.post(
 );
 
 //GET all items
-router.get("/all-items", itemController.findAll);
-router.get("/all-items-paginated", itemController.findAllPaginated);
+router.get("/all-items", middleware.checkToken, itemController.findAll);
+router.get(
+  "/all-items-paginated",
+  middleware.checkToken,
+  itemController.findAllPaginated
+);
 
 //GET single items
-router.get("/item/:item_id", itemController.findOne);
+router.get("/item/:item_id", middleware.checkToken, itemController.findOne);
 
-router.post("/delete-item/:item_id/", itemController.delete);
+router.post(
+  "/delete-item/:item_id/",
+  middleware.checkToken,
+  itemController.delete
+);
 
 module.exports = router;

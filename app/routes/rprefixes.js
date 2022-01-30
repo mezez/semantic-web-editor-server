@@ -7,6 +7,7 @@ const middleware = require("../helpers/middleware");
 //POST create rprefixs
 router.post(
   "/rprefix",
+  middleware.checkToken,
   [
     body("name").trim().isLength({ min: 1 }),
     body("description").trim().isLength({ min: 1 }),
@@ -16,12 +17,24 @@ router.post(
 );
 
 //GET all rprefixs
-router.get("/all-rprefixes", rprefixController.findAll);
-router.get("/all-rprefixes-paginated", rprefixController.findAllPaginated);
+router.get("/all-rprefixes", middleware.checkToken, rprefixController.findAll);
+router.get(
+  "/all-rprefixes-paginated",
+  middleware.checkToken,
+  rprefixController.findAllPaginated
+);
 
 //GET single rprefixs
-router.get("/rprefix/:prefix_id", rprefixController.findOne);
+router.get(
+  "/rprefix/:prefix_id",
+  middleware.checkToken,
+  rprefixController.findOne
+);
 
-router.post("/delete-prefix/:prefix_id/", rprefixController.delete);
+router.post(
+  "/delete-prefix/:prefix_id/",
+  middleware.checkToken,
+  rprefixController.delete
+);
 
 module.exports = router;

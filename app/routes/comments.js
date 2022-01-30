@@ -7,6 +7,7 @@ const middleware = require("../helpers/middleware");
 //POST create comments
 router.post(
   "/comment",
+  middleware.checkToken,
   [
     body("text").trim().isLength({ min: 1 }),
     body("user_id").trim().isLength({ min: 1 }),
@@ -16,12 +17,20 @@ router.post(
 );
 
 //GET all comments
-router.get("/all-comments", commentController.findAll);
+router.get("/all-comments", middleware.checkToken, commentController.findAll);
 router.get("/all-comments-paginated", commentController.findAllPaginated);
 
 //GET single comments
-router.get("/comment/:comment_id", commentController.findOne);
+router.get(
+  "/comment/:comment_id",
+  middleware.checkToken,
+  commentController.findOne
+);
 
-router.post("/delete-comment/:comment_id/", commentController.delete);
+router.post(
+  "/delete-comment/:comment_id/",
+  middleware.checkToken,
+  commentController.delete
+);
 
 module.exports = router;

@@ -15,12 +15,28 @@ router.post(
 );
 
 //GET all categories
-router.get("/all-categories", categoryController.findAll);
-router.get("/all-categories-paginated", categoryController.findAllPaginated);
+router.get(
+  "/all-categories",
+  middleware.checkToken,
+  categoryController.findAll
+);
+router.get(
+  "/all-categories-paginated",
+  middleware.checkToken,
+  categoryController.findAllPaginated
+);
 
 //GET single categories
-router.get("/category/:category_id", categoryController.findOne);
+router.get(
+  "/category/:category_id",
+  middleware.checkToken,
+  categoryController.findOne
+);
 
-router.post("/delete-category/:category_id/", categoryController.delete);
+router.post(
+  "/delete-category/:category_id/",
+  middleware.checkToken,
+  categoryController.delete
+);
 
 module.exports = router;

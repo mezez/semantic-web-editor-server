@@ -7,6 +7,7 @@ const middleware = require("../helpers/middleware");
 //POST create rdocuments
 router.post(
   "/document-row",
+  middleware.checkToken,
   [
     body("document_id").trim().isLength({ min: 1 }),
     body("category_id").trim().isLength({ min: 1 }),
@@ -20,19 +21,30 @@ router.post(
 //GET all rdocuments
 router.get(
   "/all-document-rows/:document_id",
+  middleware.checkToken,
   rdocumentRowController.findAllByDocumentId
 );
-router.get("/all-documents-rows", rdocumentRowController.findAll);
+router.get(
+  "/all-documents-rows",
+  middleware.checkToken,
+  rdocumentRowController.findAll
+);
 router.get(
   "/all-documents-rows-paginated",
+  middleware.checkToken,
   rdocumentRowController.findAllPaginated
 );
 
 //GET single rdocument
-router.get("/document-row/:document_row_id", rdocumentRowController.findOne);
+router.get(
+  "/document-row/:document_row_id",
+  middleware.checkToken,
+  rdocumentRowController.findOne
+);
 
 router.post(
   "/delete-document-row/:document_row_id/",
+  middleware.checkToken,
   rdocumentRowController.delete
 );
 

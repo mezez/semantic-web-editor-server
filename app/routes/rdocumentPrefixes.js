@@ -7,6 +7,7 @@ const middleware = require("../helpers/middleware");
 //POST create rdocuments
 router.post(
   "/document-prefix",
+  middleware.checkToken,
   [
     body("prefix_id").trim().isLength({ min: 1 }),
     body("document_id").trim().isLength({ min: 1 }),
@@ -17,11 +18,13 @@ router.post(
 //GET all rdocuments by doc id
 router.get(
   "/all-document-prefixes/:document_id",
+  middleware.checkToken,
   rdocumentPrefixController.findAllByDocumentId
 );
 
 router.post(
   "/delete-document-prefix/:document_prefix_id/",
+  middleware.checkToken,
   rdocumentPrefixController.delete
 );
 

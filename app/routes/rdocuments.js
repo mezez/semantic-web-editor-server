@@ -7,6 +7,7 @@ const middleware = require("../helpers/middleware");
 //POST create rdocuments
 router.post(
   "/document",
+  middleware.checkToken,
   [
     body("name").trim().isLength({ min: 1 }),
     body("user_id").trim().isLength({ min: 1 }),
@@ -18,6 +19,7 @@ router.post(
 //add or remove user from document
 router.post(
   "/document-users/:document_id",
+  middleware.checkToken,
   [
     body("user_id").trim().isLength({ min: 1 }),
     body("other_user_id").trim().isLength({ min: 1 }),
@@ -27,14 +29,23 @@ router.post(
 );
 
 //GET all rdocuments
-router.get("/all-documents", rdocumentController.findAll);
+router.get(
+  "/all-documents",
+  middleware.checkToken,
+  rdocumentController.findAll
+);
 router.get("/all-documents-paginated", rdocumentController.findAllPaginated);
 
 //GET single rdocument
-router.get("/document/:document_id", rdocumentController.findOne);
+router.get(
+  "/document/:document_id",
+  middleware.checkToken,
+  rdocumentController.findOne
+);
 
 router.post(
   "/delete-document/:document_id/:user_id",
+  middleware.checkToken,
   rdocumentController.delete
 );
 

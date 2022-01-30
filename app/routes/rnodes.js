@@ -7,6 +7,7 @@ const middleware = require("../helpers/middleware");
 //POST create rnodes
 router.post(
   "/rnode",
+  middleware.checkToken,
   [
     body("name").trim().isLength({ min: 1 }),
     body("description").trim().isLength({ min: 1 }),
@@ -16,12 +17,20 @@ router.post(
 );
 
 //GET all rnodes
-router.get("/all-rnodes", rnodeController.findAll);
-router.get("/all-rnodes-paginated", rnodeController.findAllPaginated);
+router.get("/all-rnodes", middleware.checkToken, rnodeController.findAll);
+router.get(
+  "/all-rnodes-paginated",
+  middleware.checkToken,
+  rnodeController.findAllPaginated
+);
 
 //GET single rnodes
-router.get("/rnode/:rnode_id", rnodeController.findOne);
+router.get("/rnode/:rnode_id", middleware.checkToken, rnodeController.findOne);
 
-router.post("/delete-rnode/:rnode_id/", rnodeController.delete);
+router.post(
+  "/delete-rnode/:rnode_id/",
+  middleware.checkToken,
+  rnodeController.delete
+);
 
 module.exports = router;
