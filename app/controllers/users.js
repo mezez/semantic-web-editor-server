@@ -40,7 +40,10 @@ exports.create = async (req, res, next) => {
         .then((data) => {
           let token = jwt.sign(
             { userId: data._id, email: req.body.email },
-            config.secret
+            config.secret,
+            {
+              expiresIn: "100 days", // expires in 100 days
+            }
           );
 
           res.json({
