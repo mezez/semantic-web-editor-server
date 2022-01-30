@@ -40,6 +40,13 @@ exports.addOrRemoveUserInDocument = async (req, response, next) => {
       res.status(404).json({ message: "Document not found" });
     }
 
+    //confirm the user is not same as owner
+    if (document.users.includes(user_id)) {
+      return res.status(400).json({
+        message: "You cannot add or remove yourself from a document you author",
+      });
+    }
+
     //append or remove user add
     if (type == "add") {
       document.users.push(user_id);
