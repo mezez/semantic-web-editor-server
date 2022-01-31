@@ -36,7 +36,7 @@ router.get(
 );
 router.get("/all-documents-paginated", rdocumentController.findAllPaginated);
 
-router.get("/my-documents", middleware.checkToken, rdocumentController.findMyDocuments);
+router.get("/my-documents/:user_id", middleware.checkToken, rdocumentController.findMyDocuments);
 
 //GET single rdocument
 router.get(
