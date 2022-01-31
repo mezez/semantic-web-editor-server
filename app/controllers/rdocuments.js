@@ -106,6 +106,19 @@ exports.findAll = async (req, res, next) => {
   }
 };
 
+// Retrieve and return all Docs from the database.
+exports.findMyDocuments = async (req, res, next) => {
+  try {
+    let user_id = req.params.user_id;
+
+    let rdocuments = await RDocument.find({users: user_id}).sort("-createdAt");
+
+    res.status(200).json({ rdocuments });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.findOne = async (req, res, next) => {
   try {
     let rdocument = await RDocument.findById(req.params.document_id);
