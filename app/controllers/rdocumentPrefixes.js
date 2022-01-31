@@ -1,5 +1,5 @@
 const RDocument = require("../models/rDocument");
-const RDocumentPrefix = require("../models/rDocumentRow");
+const RDocumentPrefix = require("../models/rDocumentPrefix");
 let config = require("../../config/database.js");
 
 exports.create = async (req, res, next) => {
