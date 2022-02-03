@@ -23,7 +23,7 @@ router.get(
 );
 
 router.post(
-  "/delete-document-prefix/:document_prefix_id/",
+  "/delete-document-prefix/:document_prefix_id",
   middleware.checkToken,
   rdocumentPrefixController.delete
 );

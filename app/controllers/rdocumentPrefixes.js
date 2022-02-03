@@ -11,8 +11,9 @@ exports.create = async (req, res, next) => {
 
   try {
     //prevent dulicating prefix for a single document
-    let prefixExists = await RDocumentPrefix.find({rprefix_id:req.body.prefix_id, rdocument_id:req.body.document_id})
-    if(prefixExists){
+    let existingPrefix = await RDocumentPrefix.find({rprefix_id:req.body.prefix_id, rdocument_id:req.body.document_id});
+
+    if(existingPrefix.length > 0){
       return res.status(400).json({message: "Prefix already exists in this document"});
     }
     let savedDocument = await newDocument.save();
@@ -37,7 +38,7 @@ exports.findAllByDocumentId = async (req, res, next) => {
 };
 
 exports.delete = async (req, res, next) => {
-  const prefix_id = req.params.prefix_id;
+  const prefix_id = req.params.document_prefix_id;
   try {
     const documentPrefix = await RDocumentPrefix.findById(prefix_id);
     if (!documentPrefix) {
