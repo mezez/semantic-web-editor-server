@@ -10,6 +10,11 @@ exports.create = async (req, res, next) => {
   const newDocument = new RDocumentPrefix(data);
 
   try {
+    //prevent dulicating prefix for a single document
+    let prefixExists = RDocumentPrefix.find({rprefix_id:req.body.prefix_id, rdocument_id:req.body.document_id})
+    if(prefixExists){
+      return res.status(400).json({message: "Prefix already exists in this document"});
+    }
     let savedDocument = await newDocument.save();
     return res.status(200).json(savedDocument);
   } catch (err) {
