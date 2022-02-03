@@ -3,7 +3,7 @@ const config = require('../../config/database');
 const User = require('../models/user');
 
 let checkToken = (req, res, next) => {
-     console.log(req.headers);
+    //  console.log(req.headers);
     let token =
       req.headers["x-access-token"] ||
       req.headers["authorization"] ||
