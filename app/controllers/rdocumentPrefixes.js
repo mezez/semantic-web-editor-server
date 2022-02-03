@@ -11,7 +11,7 @@ exports.create = async (req, res, next) => {
 
   try {
     //prevent dulicating prefix for a single document
-    let prefixExists = RDocumentPrefix.find({rprefix_id:req.body.prefix_id, rdocument_id:req.body.document_id})
+    let prefixExists = await RDocumentPrefix.find({rprefix_id:req.body.prefix_id, rdocument_id:req.body.document_id})
     if(prefixExists){
       return res.status(400).json({message: "Prefix already exists in this document"});
     }
