@@ -34,8 +34,8 @@ exports.findAllPropertiesAndConceptsByDocumentId = async (req, res, next) => {
   const document_id = req.params.document_id;
   
   try {
-    let tripletCategory = await Category.find({name: "Concept/Property"});
-    if (!tripletCategory) {
+    let conceptAndPropertyCategory = await Category.find({name: "Concept/Property"});
+    if (!conceptAndPropertyCategory) {
       return res.status(404).json({message: "triplet category not found"})
     }
 
@@ -43,12 +43,12 @@ exports.findAllPropertiesAndConceptsByDocumentId = async (req, res, next) => {
 
     let rdocumentRows = await RDocumentRow.find({
       rdocument_id: document_id,
-      category_id: tripletCategory._id,
+      category_id: conceptAndPropertyCategory[0]._id,
     })
       .populate("category_id")
       .sort("-createdAt");
 
-    console.log(rdocumentRows);
+    // console.log(rdocumentRows);
     //loop through the data, get the names(node, label or item) of the row data based on the category
 
     const documentRowLength = rdocumentRows.length;
@@ -99,7 +99,7 @@ exports.findAllPropertiesAndConceptsByDocumentId = async (req, res, next) => {
       finalDocumentRows.push(updatedDocumentRow);
     }
 
-    console.log(finalDocumentRows);
+    // console.log(finalDocumentRows);
 
     res.status(200).json({ rdocumentRows: finalDocumentRows });
   } catch (err) {
@@ -111,8 +111,8 @@ exports.findAllTriplesByDocumentId = async (req, res, next) => {
   const document_id = req.params.document_id;
   
   try {
-    let tripletCategory = await Category.find({name: "Triple"});
-    if (!tripletCategory) {
+    let triplesCategory = await Category.find({name: "Triple"});
+    if (!triplesCategory) {
       return res.status(404).json({message: "properties and concept category not found"})
     }
 
@@ -120,12 +120,12 @@ exports.findAllTriplesByDocumentId = async (req, res, next) => {
 
     let rdocumentRows = await RDocumentRow.find({
       rdocument_id: document_id,
-      category_id: tripletCategory._id,
+      category_id: triplesCategory[0]._id,
     })
       .populate("category_id")
       .sort("-createdAt");
 
-    console.log(rdocumentRows);
+    // console.log(rdocumentRows);
     //loop through the data, get the names(node, label or item) of the row data based on the category
 
     const documentRowLength = rdocumentRows.length;
@@ -176,7 +176,7 @@ exports.findAllTriplesByDocumentId = async (req, res, next) => {
       finalDocumentRows.push(updatedDocumentRow);
     }
 
-    console.log(finalDocumentRows);
+    // console.log(finalDocumentRows);
 
     res.status(200).json({ rdocumentRows: finalDocumentRows });
   } catch (err) {
@@ -194,7 +194,7 @@ exports.findAllByDocumentId = async (req, res, next) => {
       .populate("category_id")
       .sort("-createdAt");
 
-    console.log(rdocumentRows);
+    // console.log(rdocumentRows);
     //loop through the data, get the names(node, label or item) of the row data based on the category
 
     const documentRowLength = rdocumentRows.length;
@@ -245,7 +245,7 @@ exports.findAllByDocumentId = async (req, res, next) => {
       finalDocumentRows.push(updatedDocumentRow);
     }
 
-    console.log(finalDocumentRows);
+    // console.log(finalDocumentRows);
 
     res.status(200).json({ rdocumentRows: finalDocumentRows });
   } catch (err) {
