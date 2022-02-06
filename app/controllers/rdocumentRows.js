@@ -1,4 +1,5 @@
 const RDocument = require("../models/rDocument");
+const Category = require("../models/category");
 const RDocumentRow = require("../models/rDocumentRow");
 const RNode = require("../models/rNode");
 const RLabel = require("../models/rLabel");
@@ -29,7 +30,161 @@ exports.create = async (req, res, next) => {
   }
 };
 
-// Retrieve and return all prefixes for a document from the database.
+exports.findAllPropertiesAndConceptsByDocumentId = async (req, res, next) => {
+  const document_id = req.params.document_id;
+  
+  try {
+    let tripletCategory = await Category.find({name: "Concept/Property"});
+    if (!tripletCategory) {
+      return res.status(404).json({message: "triplet category not found"})
+    }
+
+    
+
+    let rdocumentRows = await RDocumentRow.find({
+      rdocument_id: document_id,
+      category_id: tripletCategory._id,
+    })
+      .populate("category_id")
+      .sort("-createdAt");
+
+    console.log(rdocumentRows);
+    //loop through the data, get the names(node, label or item) of the row data based on the category
+
+    const documentRowLength = rdocumentRows.length;
+    let finalDocumentRows = [];
+    let updatedDocumentRow;
+    for (let i = 0; i < documentRowLength; i++) {
+      if (rdocumentRows[i].category_id.name == "Triple") {
+        const firstNode = await RNode.find({
+          _id: rdocumentRows[i].row_data.first_column,
+        });
+
+        const secondNode = await RNode.find({
+          _id: rdocumentRows[i].row_data.second_column,
+        });
+
+        const thirdNode = await RNode.find({
+          _id: rdocumentRows[i].row_data.third_column,
+        });
+
+        updatedDocumentRow = {
+          ...rdocumentRows[i]._doc,
+          firstNode,
+          secondNode,
+          thirdNode,
+        };
+      } else {
+        //concept or property
+        const rNode = await RNode.find({
+          _id: rdocumentRows[i].row_data.first_column,
+        }).populate("rprefix_id");
+
+        const rLabel = await RLabel.find({
+          _id: rdocumentRows[i].row_data.second_column,
+        }).populate("rprefix_id");
+
+        const item = await Item.find({
+          _id: rdocumentRows[i].row_data.third_column,
+        });
+
+        updatedDocumentRow = {
+          ...rdocumentRows[i]._doc,
+          rNode,
+          rLabel,
+          item,
+        };
+      }
+
+      finalDocumentRows.push(updatedDocumentRow);
+    }
+
+    console.log(finalDocumentRows);
+
+    res.status(200).json({ rdocumentRows: finalDocumentRows });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.findAllTriplesByDocumentId = async (req, res, next) => {
+  const document_id = req.params.document_id;
+  
+  try {
+    let tripletCategory = await Category.find({name: "Triple"});
+    if (!tripletCategory) {
+      return res.status(404).json({message: "properties and concept category not found"})
+    }
+
+    
+
+    let rdocumentRows = await RDocumentRow.find({
+      rdocument_id: document_id,
+      category_id: tripletCategory._id,
+    })
+      .populate("category_id")
+      .sort("-createdAt");
+
+    console.log(rdocumentRows);
+    //loop through the data, get the names(node, label or item) of the row data based on the category
+
+    const documentRowLength = rdocumentRows.length;
+    let finalDocumentRows = [];
+    let updatedDocumentRow;
+    for (let i = 0; i < documentRowLength; i++) {
+      if (rdocumentRows[i].category_id.name == "Triple") {
+        const firstNode = await RNode.find({
+          _id: rdocumentRows[i].row_data.first_column,
+        });
+
+        const secondNode = await RNode.find({
+          _id: rdocumentRows[i].row_data.second_column,
+        });
+
+        const thirdNode = await RNode.find({
+          _id: rdocumentRows[i].row_data.third_column,
+        });
+
+        updatedDocumentRow = {
+          ...rdocumentRows[i]._doc,
+          firstNode,
+          secondNode,
+          thirdNode,
+        };
+      } else {
+        //concept or property
+        const rNode = await RNode.find({
+          _id: rdocumentRows[i].row_data.first_column,
+        }).populate("rprefix_id");
+
+        const rLabel = await RLabel.find({
+          _id: rdocumentRows[i].row_data.second_column,
+        }).populate("rprefix_id");
+
+        const item = await Item.find({
+          _id: rdocumentRows[i].row_data.third_column,
+        });
+
+        updatedDocumentRow = {
+          ...rdocumentRows[i]._doc,
+          rNode,
+          rLabel,
+          item,
+        };
+      }
+
+      finalDocumentRows.push(updatedDocumentRow);
+    }
+
+    console.log(finalDocumentRows);
+
+    res.status(200).json({ rdocumentRows: finalDocumentRows });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Retrieve and return all rows for a document from the database.
 exports.findAllByDocumentId = async (req, res, next) => {
   const document_id = req.params.document_id;
   try {

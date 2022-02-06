@@ -18,7 +18,22 @@ router.post(
   rdocumentRowController.create
 );
 
-//GET all rdocuments
+//GET all triples rdocumentrows by document id
+router.get(
+  "/all-triple-document-rows/:document_id",
+  middleware.checkToken,
+  rdocumentRowController.findAllTriplesByDocumentId
+);
+
+//GET all properties and concepts rdocumentrows by document id
+router.get(
+  "/all-properties-and-concepts-document-rows/:document_id",
+  middleware.checkToken,
+  rdocumentRowController.findAllPropertiesAndConceptsByDocumentId
+);
+
+
+//GET all rdocumentrows by document id
 router.get(
   "/all-document-rows/:document_id",
   middleware.checkToken,
