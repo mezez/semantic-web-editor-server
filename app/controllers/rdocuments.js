@@ -145,8 +145,8 @@ exports.delete = async (req, res, next) => {
     }
 
     //delete
-    await Episode.findByIdAndDelete(document_id);
-    res.status(200).json({ message: "Document successfully deleted", episode });
+    await RDocument.findByIdAndDelete(document_id);
+    res.status(200).json({ message: "Document successfully deleted", document });
   } catch (err) {
     next(err);
   }

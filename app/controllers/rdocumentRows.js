@@ -321,8 +321,8 @@ exports.delete = async (req, res, next) => {
     }
 
     //delete
-    await DocumentRow.findByIdAndDelete(document_row_id);
-    res.status(200).json({ message: "Row successfully deleted", episode });
+    await RDocumentRow.findByIdAndDelete(document_row_id);
+    res.status(200).json({ message: "Row successfully deleted", documentRow });
   } catch (err) {
     next(err);
   }
