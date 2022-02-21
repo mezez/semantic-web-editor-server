@@ -1,5 +1,11 @@
+const jwt = require("jsonwebtoken");
+const config = require("../../config/database.js");
+
+const middleware = require("../helpers/middleware");
 const RDocument = require("../models/rDocument.js");
 const User = require("../models/user.js");
+
+const APP_BASE_URL = "https://virtual-com.herokuapp.com"
 
 exports.create = async (req, res, next) => {
   let data = {
@@ -17,13 +23,109 @@ exports.create = async (req, res, next) => {
   }
 };
 
+exports.sendInviteToDocument = async (req, res, next) => {
+  const document_id = req.body.document_id;
+  const user_id = req.body.user_id;
+  const invited_user_id = req.body.invited_user_id;
+  const invited_user_email = req.body.invited_user_email;
+  const redirect_url = req.body.redirect_url;
+  try {
+    const document = await RDocument.find({ _id: document_id, user_id });
+    if (!document) {
+      const error = new Error("Document not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    //send invite
+    let token = jwt.sign({document_id,user_id,invited_user_id, invited_user_email, redirect_url},
+      config.secret,
+      {
+        expiresIn: "2 days", // expires in 2 days
+      }
+    );
+
+    //send email
+    url = APP_BASE_URL + `documents/join?token=${token}`;
+    subject = `Document Collaboration Invite`;
+    const message = `<h5>Invitation</h5><hr><br><br><p>Hello!</p><p>You have been invited to join and contribute to the <b>${document.name}</b> project. Please click <a href='${APP_BASE_URL}'>here</a> to join</p><p>Please note that this invitation link is valid for 48 hours.</p><br><p>Virtual-Com Team.</p>`;
+
+    let transportObject = {
+      sender: "VirtualCom",
+      receiver: invited_user_email,
+      subject: subject,
+      plainText: message,
+      htmlBody: message,
+    };
+
+    await mailHelper.sendMail(transportObject);
+
+
+
+  } catch (err) {
+    next(err);
+  }
+}
+
+exports.processJoin = async (req, response, next) => {
+  const token = req.query.token;
+  try {
+    decoded = middleware.verifyInviteToken(token)
+    if (valid == false){
+      return res.status(404).json({ message: "Invalid Invitation link. Confirm url is correct or link is still valid" });
+    }
+
+    const document_id = decoded.document_id;
+    const user_id = decoded.user_id;
+    const invited_user_id = decoded.invited_user_id;
+    const invited_user_email = decoded.invited_user_email;
+    const redirect_url = decoded.redirect_url;
+
+    if (!document_id || !user_id || !invited_user_id || !invited_user_email || !redirect_url) {
+      return res.status(400).json({
+        message:
+          "Invalid invite link. IDs of document, document owner and user to be added, email of user to be added and redirec url are required",
+      });
+    }
+
+    //confirm document and users are valid
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ message: "Document owner not found" });
+    }
+    const document = await RDocument.find({ _id: document_id, user_id });
+    if (!document) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+
+    //confirm the user is not same as owner
+    if (document.users.includes(user_id)) {
+      return res.status(400).json({
+        message: "You cannot add yourself to a document you author",
+      });
+    }
+
+    //append
+    document.users.push(user_id);
+    await document.save();
+
+    redirect_url = redirect_url + `?document_id=${document_id}&token=${token}&user_id=${invited_user_id}&email=${invited_user_email}`;
+
+    //to update
+    return res.redirect(redirect_url);
+  } catch (error) {
+    next(error)
+  }
+  
+};
+
 exports.addOrRemoveUserInDocument = async (req, response, next) => {
   const document_id = req.params.document_id;
   const user_id = req.body.user_id;
   const other_user_id = req.body.other_user_id;
   const type = req.body.type;
 
-  if (!document_id || !user_id || other_user_id) {
+  if (!document_id || !user_id || !other_user_id) {
     return res.status(400).json({
       message:
         "IDs of Document, user and user to be added or removed are required",
@@ -33,11 +135,11 @@ exports.addOrRemoveUserInDocument = async (req, response, next) => {
     //confirm document and users are valid
     const user = await User.findById(user_id);
     if (!user) {
-      res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     const document = await RDocument.find({ _id: document_id, user_id });
     if (!document) {
-      res.status(404).json({ message: "Document not found" });
+      return res.status(404).json({ message: "Document not found" });
     }
 
     //confirm the user is not same as owner
@@ -50,6 +152,7 @@ exports.addOrRemoveUserInDocument = async (req, response, next) => {
     //append or remove user add
     if (type == "add") {
       document.users.push(user_id);
+      await document.save();
     } else {
       //TODO CONFIRM THAT THE USERS ARE SAVED AS JUST ARRAYS
       updatedUsers = document.users.filter(
@@ -58,6 +161,7 @@ exports.addOrRemoveUserInDocument = async (req, response, next) => {
       document.users = updatedUsers;
       await document.save();
     }
+    return res.status(200).json({message:"Success"})
   } catch (err) {
     next(err);
   }

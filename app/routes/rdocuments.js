@@ -16,6 +16,34 @@ router.post(
   rdocumentController.create
 );
 
+//invite user to document
+router.post(
+  "/document-users/invite",
+  middleware.checkToken,
+  [
+    body("user_id").trim().isLength({ min: 1 }),
+    body("invited_user_id").trim().isLength({ min: 1 }),
+    body("invited_user_email").trim().isLength({ min: 1 }),
+    body("document_id").trim().isLength({ min: 1 }),
+    body("redirect_url").trim().isLength({ min: 1 }),
+    body("type").trim().isLength({ min: 1 }),
+  ],
+  rdocumentController.sendInviteToDocument
+);
+
+router.post(
+  "/document-users/join",
+  [
+    body("user_id").trim().isLength({ min: 1 }),
+    body("invited_user_id").trim().isLength({ min: 1 }),
+    body("invited_user_email").trim().isLength({ min: 1 }),
+    body("document_id").trim().isLength({ min: 1 }),
+    body("redirect_url").trim().isLength({ min: 1 }),
+    body("type").trim().isLength({ min: 1 }),
+  ],
+  rdocumentController.processJoin
+);
+
 //add or remove user from document
 router.post(
   "/document-users/:document_id",

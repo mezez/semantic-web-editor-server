@@ -60,6 +60,17 @@ exports.findAllPaginated = async (req, res, next) => {
   }
 };
 
+exports.findAllDocumentComments = async (req, res, next) => {
+  document_id = req.params.document_id
+  try {
+    let comments = await Comment.find({"rdocument_id": document_id}).populate("user_id").sort("-createdAt");
+
+    res.status(200).json({ comments });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // Retrieve and return all rows from the database.
 exports.findAll = async (req, res, next) => {
   try {

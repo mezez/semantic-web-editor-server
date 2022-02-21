@@ -44,6 +44,23 @@ let checkToken = (req, res, next) => {
     }
   };
 
+  let verifyInviteToken = (token) => {
+    if (token) {
+      jwt.verify(token, config.secret, (err, decoded) => {
+        if (err) {
+          console.log(err);
+  
+          return false
+        } else {
+          return decoded
+        }
+      });
+    } else {
+      return false
+    }
+  }
+
   module.exports = {
-    checkToken: checkToken
+    checkToken: checkToken,
+    verifyInviteToken
   };

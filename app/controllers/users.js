@@ -157,8 +157,8 @@ exports.findAll = async (req, res, next) => {
   try {
     let users = await User.find()
       .sort("-createdAt")
-      .populate("country_id")
-      .populate("state_id");
+      // .populate("country_id")
+      // .populate("state_id");
 
     res.status(200).json({ users });
   } catch (err) {
@@ -172,6 +172,7 @@ exports.findAll = async (req, res, next) => {
     // });
   }
 };
+
 
 exports.findOne = async (req, res, next) => {
   try {
