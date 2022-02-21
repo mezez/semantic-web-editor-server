@@ -16,6 +16,7 @@ router.post(
   commentController.create
 );
 
+router.get("/all-document-comments/:document_id", middleware.checkToken, commentController.findAllDocumentComments);
 //GET all comments
 router.get("/all-comments", middleware.checkToken, commentController.findAll);
 router.get("/all-comments-paginated", commentController.findAllPaginated);
