@@ -5,7 +5,7 @@ const middleware = require("../helpers/middleware");
 const RDocument = require("../models/rDocument.js");
 const User = require("../models/user.js");
 
-const APP_BASE_URL = "https://virtual-com.herokuapp.com"
+const APP_BASE_URL = "https://virtual-com.herokuapp.com/api/v1"
 
 exports.create = async (req, res, next) => {
   let data = {
@@ -78,6 +78,8 @@ exports.processJoin = async (req, response, next) => {
   const token = req.query.token;
   try {
     decoded = middleware.verifyInviteToken(token)
+    console.log();
+    console.log(decoded);
     if (decoded == false){
       return res.status(404).json({ message: "Invalid Invitation link. Confirm url is correct or link is still valid" });
     }

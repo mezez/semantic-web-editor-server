@@ -17,6 +17,9 @@ router.post(
 );
 
 //invite user to document
+
+router.get("/document-users/join", middleware.checkToken,rdocumentController.processJoin);
+
 router.post(
   "/document-users/invite",
   middleware.checkToken,
@@ -30,11 +33,9 @@ router.post(
   rdocumentController.sendInviteToDocument
 );
 
-router.get("/document-users/join",rdocumentController.processJoin);
-
 //add or remove user from document
 router.post(
-  "/document-users/:document_id",
+  "/manual-document-users/:document_id",
   middleware.checkToken,
   [
     body("user_id").trim().isLength({ min: 1 }),
