@@ -78,7 +78,7 @@ exports.processJoin = async (req, response, next) => {
   const token = req.query.token;
   try {
     decoded = middleware.verifyInviteToken(token)
-    if (valid == false){
+    if (decoded == false){
       return res.status(404).json({ message: "Invalid Invitation link. Confirm url is correct or link is still valid" });
     }
 

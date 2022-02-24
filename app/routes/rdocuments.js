@@ -30,18 +30,7 @@ router.post(
   rdocumentController.sendInviteToDocument
 );
 
-router.get(
-  "/document-users/join",
-  [
-    body("user_id").trim().isLength({ min: 1 }),
-    body("invited_user_id").trim().isLength({ min: 1 }),
-    body("invited_user_email").trim().isLength({ min: 1 }),
-    body("document_id").trim().isLength({ min: 1 }),
-    body("redirect_url").trim().isLength({ min: 1 }),
-    body("type").trim().isLength({ min: 1 }),
-  ],
-  rdocumentController.processJoin
-);
+router.get("/document-users/join",rdocumentController.processJoin);
 
 //add or remove user from document
 router.post(
