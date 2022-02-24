@@ -28,6 +28,9 @@ router.post(
 );
 
 //get all users
+router.get("/all-users", middleware.checkToken, userController.findAll);
+
+//get all users
 router.get("/index", middleware.checkToken, userController.findAllPaginated);
 
 //get single user
