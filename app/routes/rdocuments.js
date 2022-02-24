@@ -30,7 +30,7 @@ router.post(
   rdocumentController.sendInviteToDocument
 );
 
-router.post(
+router.get(
   "/document-users/join",
   [
     body("user_id").trim().isLength({ min: 1 }),

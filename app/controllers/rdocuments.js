@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require("../../config/database.js");
-
+const mailHelper = require("../helpers/email");
 const middleware = require("../helpers/middleware");
 const RDocument = require("../models/rDocument.js");
 const User = require("../models/user.js");
@@ -46,9 +46,9 @@ exports.sendInviteToDocument = async (req, res, next) => {
     );
 
     //send email
-    url = APP_BASE_URL + `documents/join?token=${token}`;
+    url = APP_BASE_URL + `/documents/document-users/join?token=${token}`;
     subject = `Document Collaboration Invite`;
-    const message = `<h5>Invitation</h5><hr><br><br><p>Hello!</p><p>You have been invited to join and contribute to the <b>${document.name}</b> project. Please click <a href='${APP_BASE_URL}'>here</a> to join</p><p>Please note that this invitation link is valid for 48 hours.</p><br><p>Virtual-Com Team.</p>`;
+    const message = `<h5>Invitation</h5><hr><br><br><p>Hello!</p><p>You have been invited to join and contribute to the <b>${document[0].name}</b> project. Please click <a href='${url}'>here</a> to join</p><p>Please note that this invitation link is valid for 48 hours.</p><br><p>Virtual-Com Team.</p>`;
 
     let transportObject = {
       sender: "VirtualCom",
@@ -58,8 +58,15 @@ exports.sendInviteToDocument = async (req, res, next) => {
       htmlBody: message,
     };
 
-    await mailHelper.sendMail(transportObject);
-
+    sent = await mailHelper.sendMail(transportObject);
+    if (sent) {
+      return res.status(200).json({
+        message:"Invite sent"
+      });
+    }
+    return res.status(500).json({
+      message:"Invite could not be sent",
+    });
 
 
   } catch (err) {
