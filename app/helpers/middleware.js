@@ -44,9 +44,10 @@ let checkToken = (req, res, next) => {
     }
   };
 
-  let verifyInviteToken = (token) => {
+  let verifyInviteToken = async (token) => {
     if (token) {
-      jwt.verify(token, config.secret, (err, decoded) => {
+      _decoded = null;
+      _decoded = await jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
           console.log(err);
   
@@ -55,6 +56,7 @@ let checkToken = (req, res, next) => {
           return decoded
         }
       });
+      return _decoded
     } else {
       return false
     }

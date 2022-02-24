@@ -74,11 +74,10 @@ exports.sendInviteToDocument = async (req, res, next) => {
   }
 }
 
-exports.processJoin = async (req, response, next) => {
+exports.processJoin = async (req, res, next) => {
   const token = req.query.token;
   try {
-    decoded = middleware.verifyInviteToken(token)
-    console.log();
+    decoded = await middleware.verifyInviteToken(token)
     console.log(decoded);
     if (decoded == false){
       return res.status(404).json({ message: "Invalid Invitation link. Confirm url is correct or link is still valid" });
@@ -88,7 +87,7 @@ exports.processJoin = async (req, response, next) => {
     const user_id = decoded.user_id;
     const invited_user_id = decoded.invited_user_id;
     const invited_user_email = decoded.invited_user_email;
-    const redirect_url = decoded.redirect_url;
+    let redirect_url = decoded.redirect_url;
 
     if (!document_id || !user_id || !invited_user_id || !invited_user_email || !redirect_url) {
       return res.status(400).json({
@@ -102,20 +101,32 @@ exports.processJoin = async (req, response, next) => {
     if (!user) {
       return res.status(404).json({ message: "Document owner not found" });
     }
-    const document = await RDocument.find({ _id: document_id, user_id });
-    if (!document) {
+    let document = await RDocument.find({ _id: document_id, user_id });
+    // console.log(document);
+    document = document[0]
+    if (document.length == 0) {
       return res.status(404).json({ message: "Document not found" });
     }
 
-    //confirm the user is not same as owner
-    if (document.users.includes(user_id)) {
+    //confirm the invited user is not the author
+    if (document.user_id.toString() == invited_user_id.toString()) {
       return res.status(400).json({
-        message: "You cannot add yourself to a document you author",
+        message: "You cannot invite yourself to a document your author",
+      });
+    }
+
+    //confirm the invited user is not already a contributor
+    // if (document.users.includes(invited_user_id)) {
+    if (document.users.includes(mongoose.Types.ObjectId(invited_user_id))) {
+      return res.status(400).json({
+        message: "You are already a contributor to this document",
       });
     }
 
     //append
-    document.users.push(user_id);
+    // let updated_users = [...document.users, user_id]
+    // document.users = updated_users
+    document.users.push(user_id)
     await document.save();
 
     redirect_url = redirect_url + `?document_id=${document_id}&token=${token}&user_id=${invited_user_id}&email=${invited_user_email}`;
@@ -146,17 +157,27 @@ exports.addOrRemoveUserInDocument = async (req, response, next) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const document = await RDocument.find({ _id: document_id, user_id });
-    if (!document) {
+    let document = await RDocument.find({ _id: document_id, user_id });
+    if (document.length == 0) {
       return res.status(404).json({ message: "Document not found" });
     }
 
-    //confirm the user is not same as owner
-    if (document.users.includes(user_id)) {
+    document = document[0]
+
+    //confirm the invited user is not the author
+    if (document.user_id == invited_user_id) {
       return res.status(400).json({
-        message: "You cannot add or remove yourself from a document you author",
+        message: "You cannot invite yourself to a document your author",
       });
     }
+
+    //confirm the invited user is not already a contributor
+    // if (document.users.includes(invited_user_id)) {
+      if (document.users.includes(mongoose.Types.ObjectId(invited_user_id))) {
+        return res.status(400).json({
+          message: "You are already a contributor to this document",
+        });
+      }
 
     //append or remove user add
     if (type == "add") {
