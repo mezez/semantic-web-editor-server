@@ -18,7 +18,7 @@ router.post(
 
 //invite user to document
 
-router.get("/document-users/join", middleware.checkToken,rdocumentController.processJoin);
+router.get("/document-users/join", rdocumentController.processJoin);
 
 router.post(
   "/document-users/invite",
