@@ -127,7 +127,7 @@ exports.processJoin = async (req, res, next) => {
     //append
     // let updated_users = [...document.users, user_id]
     // document.users = updated_users
-    document.users.push(user_id)
+    document.users.push(invited_user_id)
     await document.save();
 
     redirect_url = redirect_url + `?document_id=${document_id}&token=${token}&user_id=${invited_user_id}&email=${invited_user_email}`;
@@ -183,7 +183,7 @@ exports.addOrRemoveUserInDocument = async (req, response, next) => {
 
     //append or remove user add
     if (type == "add") {
-      document.users.push(user_id);
+      document.users.push(invited_user_id);
       await document.save();
     } else {
       //TODO CONFIRM THAT THE USERS ARE SAVED AS JUST ARRAYS

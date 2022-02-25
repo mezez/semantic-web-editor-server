@@ -4,7 +4,7 @@ const RDocumentSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     number_records: { type: Number, required: false, default: 0 },
-    users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", unique: true }],
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
