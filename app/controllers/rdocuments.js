@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const config = require("../../config/database.js");
 const mailHelper = require("../helpers/email");
@@ -134,6 +135,7 @@ exports.processJoin = async (req, res, next) => {
     //to update
     return res.redirect(redirect_url);
   } catch (error) {
+    console.log(error);
     next(error)
   }
   
