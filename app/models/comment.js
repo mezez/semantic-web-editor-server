@@ -4,6 +4,7 @@ const CommentSchema = mongoose.Schema(
   {
     text: { type: String, required: true },
     rdocument_id: { type: mongoose.Schema.Types.ObjectId, ref: "RDocument" },
+    rdocument_row_id: { type: mongoose.Schema.Types.ObjectId, ref: "RDocumentRow" },
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {

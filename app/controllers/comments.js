@@ -2,9 +2,18 @@ const Comment = require("../models/comment");
 const RDocument = require("../models/rDocument");
 
 exports.create = async (req, res, next) => {
+  let docId = null
+  let rowId = null
+  if(req.body.rdocument_id){
+    docId = req.body.rdocument_id
+  }
+  if(req.body.rdocument_row_id){
+    docId = req.body.rdocument_id
+  }
   let data = {
     text: req.body.text,
-    rdocument_id: req.body.rdocument_id,
+    rdocument_id: docId,
+    rdocument_row_id: rowId,
     user_id: req.body.user_id,
   };
   const newComment = new Comment(data);
@@ -64,6 +73,17 @@ exports.findAllDocumentComments = async (req, res, next) => {
   document_id = req.params.document_id
   try {
     let comments = await Comment.find({"rdocument_id": document_id}).populate("user_id").sort("-createdAt");
+
+    res.status(200).json({ comments });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.findAllDocumentRowComments = async (req, res, next) => {
+  document_row_id = req.params.document_row_id
+  try {
+    let comments = await Comment.find({"rdocument_row_id": document_row_id}).populate("user_id").sort("-createdAt");
 
     res.status(200).json({ comments });
   } catch (err) {
