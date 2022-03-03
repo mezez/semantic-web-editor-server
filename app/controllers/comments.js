@@ -74,7 +74,7 @@ exports.findAllDocumentComments = async (req, res, next) => {
   try {
     let comments = await Comment.find({"rdocument_id": document_id}).populate("user_id").sort("-createdAt");
 
-    res.status(200).json({ comments });
+    return res.status(200).json({ comments });
   } catch (err) {
     next(err);
   }
@@ -85,7 +85,7 @@ exports.findAllDocumentRowComments = async (req, res, next) => {
   try {
     let comments = await Comment.find({"rdocument_row_id": document_row_id}).populate("user_id").sort("-createdAt");
 
-    res.status(200).json({ comments });
+    return res.status(200).json({ comments });
   } catch (err) {
     next(err);
   }
