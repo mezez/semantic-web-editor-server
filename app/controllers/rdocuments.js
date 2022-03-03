@@ -141,7 +141,7 @@ exports.processJoin = async (req, res, next) => {
   
 };
 
-exports.addOrRemoveUserInDocument = async (req, response, next) => {
+exports.addOrRemoveUserInDocument = async (req, res, next) => {
   const document_id = req.params.document_id;
   const user_id = req.body.user_id;
   const other_user_id = req.body.other_user_id;
@@ -169,26 +169,27 @@ exports.addOrRemoveUserInDocument = async (req, response, next) => {
     //confirm the invited user is not the author
     if (document.user_id == invited_user_id) {
       return res.status(400).json({
-        message: "You cannot invite yourself to a document your author",
+        message: "You cannot invite or remove yourself to a document your author",
       });
     }
 
     //confirm the invited user is not already a contributor
     // if (document.users.includes(invited_user_id)) {
+
+    //append or remove user add
+    if (type == "add") {
       if (document.users.includes(mongoose.Types.ObjectId(invited_user_id))) {
         return res.status(400).json({
           message: "You are already a contributor to this document",
         });
       }
 
-    //append or remove user add
-    if (type == "add") {
       document.users.push(invited_user_id);
       await document.save();
     } else {
       //TODO CONFIRM THAT THE USERS ARE SAVED AS JUST ARRAYS
       updatedUsers = document.users.filter(
-        (userId, index) => userId != user_id
+        (userId, index) => userId != invited_user_id
       );
       document.users = updatedUsers;
       await document.save();
