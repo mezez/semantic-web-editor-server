@@ -20,15 +20,15 @@ exports.create = async (req, res, next) => {
 
   try {
     //document should be valid
-    let document = await RDocument.findById(req.body.rdocument_id);
-    if (!document) {
-      return res.status(404).json({ message: "Invalid document id" });
-    }
-    if (!document.users.includes(req.body.user_id)) {
-      return res
-        .status(400)
-        .json({ message: "User is not a contributor to this document" });
-    }
+    // let document = await RDocument.findById(req.body.rdocument_id);
+    // if (!document) {
+    //   return res.status(404).json({ message: "Invalid document id" });
+    // }
+    // if (!document.users.includes(req.body.user_id)) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "User is not a contributor to this document" });
+    // }
     //you need to be part of the contributors to comment
     let comment = await newComment.save();
     return res.status(200).json(comment);
