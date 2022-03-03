@@ -7,8 +7,8 @@ exports.create = async (req, res, next) => {
   if(req.body.rdocument_id){
     docId = req.body.rdocument_id
   }
-  if(req.body.rdocument_row_id){
-    rowId = req.body.rdocument_id
+  else if(req.body.rdocument_row_id){
+    rowId = req.body.rdocument_row_id
   }
   let data = {
     text: req.body.text,
