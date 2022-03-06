@@ -129,8 +129,14 @@ exports.processJoin = async (req, res, next) => {
     // document.users = updated_users
     document.users.push(invited_user_id)
     await document.save();
+    let invited_user_data = await User.findById(invited_user_id)
+    
+    if (!invited_user_data) {
+      return res.status(404).json({ message: "Invited user not found" });
+    }
+    const invited_user_name = invited_user_data.name
 
-    redirect_url = redirect_url + `?document_id=${document_id}&token=${token}&user_id=${invited_user_id}&email=${invited_user_email}`;
+    redirect_url = redirect_url + `?document_id=${document_id}&token=${token}&user_id=${invited_user_id}&name=${invited_user_name}`;
 
     //to update
     return res.redirect(redirect_url);
