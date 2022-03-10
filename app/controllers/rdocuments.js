@@ -118,7 +118,7 @@ exports.processJoin = async (req, res, next) => {
 
     //confirm the invited user is not already a contributor
     // if (document.users.includes(invited_user_id)) {
-    if (document.users.includes(mongoose.Types.ObjectId(invited_user_id))) {
+    if (document.users.includes(mongoose.Types.ObjectId(invited_user_id)) || document.users.includes(invited_user_id)) {
       return res.status(400).json({
         message: "You are already a contributor to this document",
       });
