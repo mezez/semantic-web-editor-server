@@ -22,7 +22,7 @@ exports.sendMail = async (transportObject) => {
         // user: testAccount.user, // generated ethereal user
         // pass: testAccount.pass, // generated ethereal password
         user: "mez.test.email@gmail.com",
-        pass: "meztestemail3",
+        pass: "",
       },
       host: "smtp.gmail.com",
       tls: {
